@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils.timezone import now
-
+from datetime import datetime
 
 # Create your models here.
 
@@ -9,6 +9,12 @@ from django.utils.timezone import now
 # - Description
 # - Any other fields you would like to include in car make model
 # - __str__ method to print a car make object
+
+class CarMake(models.Model):
+    name = models.CharField(null=False, max_length=30)
+    description = models.CharField(null=False, max_length=300)
+    def __str__(self):
+        return self.name + " (" + self.description + ")"
 
 
 # <HINT> Create a Car Model model `class CarModel(models.Model):`:
@@ -19,6 +25,15 @@ from django.utils.timezone import now
 # - Year (DateField)
 # - Any other fields you would like to include in car model
 # - __str__ method to print a car make object
+class CarModel(models.Model):
+    car_make = models.ForeignKey(CarMake, null=True, on_delete=models.PROTECT)
+    CAR_TYPES = (('sedan','Sedan'), ('suv','SUV'), ('wagon','WAGON'), ('coupe','Coupe'), ('sports car','Sports car'), ('convertible','Convertible'), ('hatchback','Hatchback'), ('crossover','Crossover'), ('minivan','Minivan'), ('other','Other'))
+    name = models.CharField(null=False, max_length=30)
+    dealer_id = models.IntegerField()
+    model_type = models.CharField(null=False, choices=CAR_TYPES, default='Other', max_length=15)
+    year = models.DateField(null=False)
+    def __str__(self):
+        return self.name + " (" + self.model_type + ", " + self.year.strftime("%Y") + ")"
 
 
 # <HINT> Create a plain Python class `CarDealer` to hold dealer data
