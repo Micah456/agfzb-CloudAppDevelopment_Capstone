@@ -3,7 +3,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render, redirect
 # from .models import related models
-from .restapis import get_dealers_from_cf, get_dealer_by_id_from_cf, get_dealer_by_state_from_cf
+from .restapis import get_dealers_from_cf, get_dealer_by_id_from_cf, get_dealer_by_state_from_cf, get_dealers_reviews_from_cf
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from datetime import datetime
@@ -79,6 +79,7 @@ def get_dealerships(request):
     if request.method == "GET":
         url = "https://eu-gb.functions.appdomain.cloud/api/v1/web/20c90a8b-c798-46b7-b609-061b69cda4c8/dealership-package/get-dealership"
         state = request.GET.get('state')
+        print(state + "-------------------------------")
         dealerships = []
         if state:
             dealerships = get_dealer_by_state_from_cf(url, state)
@@ -94,6 +95,12 @@ def get_dealerships(request):
 # Create a `get_dealer_details` view to render the reviews of a dealer
 # def get_dealer_details(request, dealer_id):
 # ...
+def get_dealer_details(request, dealer_id):
+    url = "https://eu-gb.functions.appdomain.cloud/api/v1/web/20c90a8b-c798-46b7-b609-061b69cda4c8/dealership-package/get-review"
+    print(str(dealer_id) + "-------------------------------")
+    reviews = get_dealers_reviews_from_cf(url, dealer_id)
+    review_names = ', '.join([review.name for review in reviews])
+    return HttpResponse(review_names)
 
 def get_dealership_from_id(request, dealer_id):
     if request.method == "GET":
