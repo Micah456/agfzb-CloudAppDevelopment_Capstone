@@ -52,9 +52,37 @@ def get_dealers_from_cf(url, **kwargs):
 
     return results
 
-def get_dealer_by_id_from_cf():
+def get_dealer_by_id_from_cf(url, id):
     #TODO Start from here
-    pass
+    json_result = get_request(url, **{"dealer_id" : id})
+    if json_result:
+        dealers = json_result
+        if type(dealers) == str:
+            dealers = json.loads(dealers)
+        # Create a CarDealer object with values
+        dealer = dealers[0]
+        dealer_obj = CarDealer(address=dealer["address"], city=dealer["city"], full_name=dealer["full_name"],
+                                id=dealer["id"], lat=dealer["lat"], long=dealer["long"],
+                               short_name=dealer["short_name"],
+                               st=dealer["st"], zip=dealer["zip"])
+
+    return dealer_obj
+
+def get_dealer_by_state_from_cf(url, state):
+    #TODO Start from here
+    json_result = get_request(url, **{"state" : id})
+    if json_result:
+        dealers = json_result
+        if type(dealers) == str:
+            dealers = json.loads(dealers)
+        # Create a CarDealer object with values
+        dealer = dealers[0]
+        dealer_obj = CarDealer(address=dealer["address"], city=dealer["city"], full_name=dealer["full_name"],
+                                id=dealer["id"], lat=dealer["lat"], long=dealer["long"],
+                               short_name=dealer["short_name"],
+                               st=dealer["st"], zip=dealer["zip"])
+
+    return dealer_obj
 
 # Create a get_dealer_reviews_from_cf method to get reviews by dealer id from a cloud function
 # def get_dealer_by_id_from_cf(url, dealerId):
