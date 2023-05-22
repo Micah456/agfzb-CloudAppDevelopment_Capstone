@@ -124,8 +124,9 @@ def get_dealers_reviews_from_cf(url, dealer_id):
         for review in reviews:
             print("REVIEW CONTENT -----------------")
             print(review)
-            # Create a CarDealer object with values
+            # Create a DealerReview object with values
             review_obj = DealerReview(**review)
+            review_obj.sentiment = analyze_review_sentiments(review.review)
             results.append(review_obj)
 
     return results
@@ -137,11 +138,13 @@ def get_dealers_reviews_from_cf(url, dealer_id):
 # - Get the returned sentiment label such as Positive or Negative
 def analyze_review_sentiments(dealer_review):
     #TODO Continue from here
+    api_key = "pU4Et4e05Jcmq0mrEdKRJ9ca7UQjwSgemZo2nRULUHSm"
+    url = "https://api.eu-gb.natural-language-understanding.watson.cloud.ibm.com/instances/a14d230c-6299-42fe-a397-9eca7bf3bb8c"
     params = dict()
-    params["text"] = kwargs["text"]
-    params["version"] = kwargs["version"]
-    params["features"] = kwargs["features"]
-    params["return_analyzed_text"] = kwargs["return_analyzed_text"]
+    params["text"] = dealer_review
+    params["version"] = '2022-04-07'
+    #params["features"] = 1
+    params["return_analyzed_text"] = 0
     response = get_request(url, api_key, **params)
 
 
