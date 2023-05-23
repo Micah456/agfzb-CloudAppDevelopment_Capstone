@@ -12,15 +12,15 @@
 </head>
     <body>
     <!--Add review form here -->
-    <form action="{% url 'djangoapp:registration' %}" method="post">
+    <form action="{% url 'djangoapp:Add Review' dealer.id %}" method="post">
         <div class="container">
           <h1>Add a review about {{ dealer.full_name }}</h1>
           <hr>
           <label for="review-content"><b>Enter the review content</b></label>
           <br>
-          <textarea id="review-content" style="width:90%" placeholder="Enter your review here" required></textarea>
+          <textarea name="review-content" id="review-content" style="width:90%" placeholder="Enter your review here" required></textarea>
           <br>
-          <input type="checkbox" id="has-purchased" onclick="hasPurchasedToggle()" data-toggle="collapse" data-target="#purchase-details" aria-expanded="false" aria-controls="purchase-details">
+          <input name="has-purchased" type="checkbox" id="has-purchased">
           <label for="has-purchased">Has purchased a car from {{ dealer.full_name }}? <span class="text-secondary">(select purchased car information below if checked)</span></label>
           <div id="purchase-details">
             <label for="car-select"><b>Select your car (model-make-year): </b></label>
@@ -32,7 +32,7 @@
             <br>
             <label for="purchase-date"><b>Select Your Purchase Date:</b></label>
             <br>
-            <input id=purchase-date type="Date">
+            <input name="purchase-date" id="purchase-date" type="Date">
           </div>
           <div>
               {% csrf_token %}
@@ -41,17 +41,4 @@
         </div>
       </form>
     </body>
-    <script type="application/javascript">
-        purchaseDetailsEl = document.getElementByID("purchase-details")
-        hasPurchasedEl = document.getElementByID("has-purchased")
-
-        function hasPurchasedToggle(){
-            if(hasPurchasedEl.checked){
-                purchaseDetailsEl.style.display == "block"
-            }
-            else{
-                purchaseDetailsEl.style.display == "none"
-            }
-        }
-    </script>
 </html>
