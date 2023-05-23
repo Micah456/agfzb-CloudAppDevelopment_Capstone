@@ -165,5 +165,5 @@ def analyze_review_sentiments(text):
     except Exception as e:
         print("NLU FAILURE ------------")
         print(e)
-        return "No sentiment"
+        return "neutral"
 
