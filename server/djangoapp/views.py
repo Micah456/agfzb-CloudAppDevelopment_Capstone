@@ -10,7 +10,7 @@ from datetime import datetime
 import logging
 import json
 from .models import CarMake, CarModel
-from date-time import date-time
+from datetime import datetime
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -123,13 +123,16 @@ def add_review(request, dealer_id):
         user = request.user
         if user.is_authenticated:
             review = dict()
+            review["name"] = user.first_name + " " + user.last_name
             review["time"] = datetime.utcnow().isoformat()
             review["dealership"] = int(dealer_id)
             review["review"] = request.POST['review-content']
+            review["id"] = int(datetime.utcnow().strftime("%y%-m%-d%-H%-M%-S"))
             if request.POST.get('has-purchased', False):
                 review["purchase"] = True
-                review["purchase_date"] = request.POST['purchase-date'].strptime()strftime("%m/%d/%Y")
+                review["purchase_date"] = datetime.strptime(request.POST['purchase-date'], "%Y-%m-%d").strftime("%m/%d/%Y")
                 review["car"] = request.POST['car-select']
+                #2023-06-06T15:28:29.731314 #"%Y-%m-%dT%H:%M:%S:%f"
             else:
                 review["purchase"] = False
             json_payload = dict()
