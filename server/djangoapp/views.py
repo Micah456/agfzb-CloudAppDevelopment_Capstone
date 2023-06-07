@@ -131,7 +131,10 @@ def add_review(request, dealer_id):
             if request.POST.get('has-purchased', False):
                 review["purchase"] = True
                 review["purchase_date"] = datetime.strptime(request.POST['purchase-date'], "%Y-%m-%d").strftime("%m/%d/%Y")
-                review["car"] = request.POST['car-select']
+                car_details = request.POST['car-select'].split("-")
+                review["car_make"] = car_details[1]
+                review["car_model"] = car_details[0]
+                review["car_year"] = car_details[2]
                 #2023-06-06T15:28:29.731314 #"%Y-%m-%dT%H:%M:%S:%f"
             else:
                 review["purchase"] = False
@@ -139,17 +142,18 @@ def add_review(request, dealer_id):
             json_payload['review'] = review
             url = "https://eu-gb.functions.appdomain.cloud/api/v1/web/20c90a8b-c798-46b7-b609-061b69cda4c8/dealership-package/post-review"
             print(json_payload)
-            #response = post_request(url=url, json_payload=json_payload)
+            response = post_request(url=url, json_payload=json_payload)
             #print(response)
-            return HttpResponse(json.dumps(json_payload))
+            redirect("djangoapp:dealer_details", dealer_id=dealer_id)
 
     else:
         context = {}
         url = "https://eu-gb.functions.appdomain.cloud/api/v1/web/20c90a8b-c798-46b7-b609-061b69cda4c8/dealership-package/get-dealership"
         # Get dealers from the URL
         dealer = get_dealer_by_id_from_cf(url, dealer_id)
-        cars = CarMake.objects.all()
-        cars = cars[0].carmodel_set.all()
+        cars = CarModel.objects.filter(dealer_id=dealer_id)
+        #cars = CarMake.objects.all()
+        #cars = cars[0].carmodel_set.all()
         context['dealer'] = dealer
         context['cars'] = cars
         return render(request,'djangoapp/add_review.html', context)
